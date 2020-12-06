@@ -1,0 +1,17 @@
+A little how to guide I used to get started:
+https://www.intmath.com/blog/mathematics/math-of-ecgs-fourier-series-4281
+https://www.intmath.com/fourier-series/ecg-fourier-quartic-plusT.pdf
+
+
+Online function plotting:
+https://www.desmos.com/calculator?lang=de
+
+
+Some basic math stuff:
+https://www.intmath.com/blog/mathematics/how-to-draw-y2-x-2-2301
+
+Integrals:
+https://www.mathebibel.de/integrationsregeln
+
+(if youre lazy go online)
+https://www.integralrechner.de/
