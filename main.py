@@ -1,6 +1,17 @@
 from math import pi, sin, cos
-
 from matplotlib import pyplot
+
+"""Generating an approximated ECG signal using Fourier series. 60 beats per minute"""
+# My base functions
+# P-Peak:
+# -0.000125*((x-300)**2)+0.2
+
+# R-peak:
+# -0.0000156((x-420)**4)+2.5
+
+# T-Peak:
+# -0.0001*((x-690)**2)+0.6
+
 
 
 def fourier_fR(cnt_R, x):
