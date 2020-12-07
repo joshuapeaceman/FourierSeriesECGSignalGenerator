@@ -58,9 +58,9 @@ def fourier_fT(cnt_T, x):
 
 
 fourierfR = []
-fourier_n_R = 50
-fourier_n_P = 50
-fourier_n_T = 50
+fourier_n_R = 30
+fourier_n_P = 30
+fourier_n_T = 30
 
 x = 0
 up = 2000
