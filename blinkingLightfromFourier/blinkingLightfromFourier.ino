@@ -2,32 +2,142 @@
 #define RED_LED 10
 
 const int lower = 150;
-const int array_length = 850;
+const int array_length = 900;
 const int fourier_n = 50;
 const int delay_time = 2;
 // array storing brightness values calculated from ecg-signal generated using fourier series
 uint8_t values[array_length - lower];
 
+int settings_case = 0;
 
 void setup() {
   Serial.begin(9600);
   pinMode(RED_LED, OUTPUT);
   pinMode(BLUE_LED, OUTPUT);
-  initialize_data();
+  pinMode(9, INPUT);
+  
+  initialize_data(0);
 }
 
-
+int analog_in_one = 0;
+int analog_in_two = 0;
+int case_ctr = 0;
 void loop() {
-  for (int x = 0; x < array_length - lower; x++) {
-    analogWrite(BLUE_LED, values[x]);
-    analogWrite(RED_LED, values[x]);
+    Serial.print("Case: ");
+    Serial.println(case_ctr);
 
-    delay(delay_time);
-  }
+    if (digitalRead(9) == 0){
+      case_ctr++;
+      delay(300);
+    }
+
+   
+    switch (case_ctr){
+      case 0:      
+        for (int x = 0; x < array_length - lower; x++) {
+          analogWrite(BLUE_LED, values[x]);
+          analogWrite(RED_LED, values[x]);
+          delay(delay_time);
+        }
+        break;
+        
+      case 1:
+          analogWrite(RED_LED, 0);
+          for (int x = 0; x < array_length - lower; x++) {
+            analogWrite(BLUE_LED, values[x]);
+            delay(delay_time);
+          } 
+        break;
+
+      case 2:
+        analogWrite(BLUE_LED, 0);
+        for (int x = 0; x < array_length - lower; x++) {          
+          analogWrite(RED_LED, values[x]);
+          delay(delay_time);
+          }
+        break;
+      
+        case 3:
+          analogWrite(BLUE_LED, 1);
+          for (int x = 0; x < array_length - lower; x++) {          
+            analogWrite(RED_LED, values[x]);
+            delay(delay_time);
+          }
+        break;
+
+        case 4:
+          analogWrite(RED_LED, 1);
+          for (int x = 0; x < array_length - lower; x++) {          
+            analogWrite(BLUE_LED, values[x]);
+            delay(delay_time);
+          }
+          break;
+
+         case 5:
+          analogWrite(BLUE_LED, 0);
+          for (int x = 0; x < array_length - lower; x++) {          
+            analogWrite(RED_LED, values[x]);
+            delay(delay_time);
+          }
+        break;
+
+        case 6:
+          analogWrite(RED_LED, 0);
+          for (int x = 0; x < array_length - lower; x++) {          
+            analogWrite(BLUE_LED, values[x]);
+            delay(delay_time);
+          }
+          break;
+
+        case 7:
+          analogWrite(RED_LED, 0);
+          analogWrite(BLUE_LED, 255);
+
+          delay(100);
+
+          analogWrite(RED_LED, 255);
+          analogWrite(BLUE_LED, 0);
+
+          delay(100);
+          
+          break;
+
+         case 8:
+          analogWrite(RED_LED, 0);
+          analogWrite(BLUE_LED, 0);
+
+          break;
+          
+        case 9:
+          blink_led(15);
+          if (settings_case == 0){
+            settings_case = 1;
+            delay(100);
+            blink_led(5);
+            initialize_data(1);
+          }
+          else{
+            settings_case = 0;
+            delay(100);
+            blink_led(10);
+            initialize_data(0);
+            
+          }
+          case_ctr = 0;
+          
+        
+          break;
+        
+        
+        }
+     
 }
 
 
-void initialize_data() {
+void initialize_data(int setting) {
+  Serial.print("Setting: ");
+  Serial.println(setting);
+  delay(250);
   Serial.print(fourier_n);
   Serial.println(" Fourier sums");
   Serial.print(array_length - lower);
@@ -37,10 +147,14 @@ void initialize_data() {
   blink_led(5);
   int x = lower;
   for (int i = 0; i < array_length - lower; i++) {
+  float val = 0;
 
-    //float val = (fourier_fP(fourier_n, x)+fourier_fR(fourier_n, x)+fourier_fT(fourier_n, x))*100;
-
-    float val = (fourier_fP(fourier_n, x) + fourier_fR(fourier_n, x)) * 100;
+    if (setting == 0){
+      val = (fourier_fP(fourier_n, x)+fourier_fR(fourier_n, x)+fourier_fT(fourier_n, x))*100;
+    }
+    else{
+      val = (fourier_fP(fourier_n, x) + fourier_fR(fourier_n, x)) * 100;
+    }
 
     if (val <= 4) {
       values[i] = 1;
@@ -60,11 +174,13 @@ void initialize_data() {
 void blink_led(int no) {
   for (int i = 0; i < no; i++) {
     digitalWrite(BLUE_LED, HIGH);
-    digitalWrite(RED_LED, LOW);
+    digitalWrite(RED_LED, HIGH);
     delay(3);
     digitalWrite(BLUE_LED, LOW);
-    digitalWrite(RED_LED, HIGH);
+    digitalWrite(RED_LED, LOW);
     delay(100);
+
+    
   }
 }
 
